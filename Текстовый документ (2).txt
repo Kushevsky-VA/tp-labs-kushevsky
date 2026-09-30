@@ -1,0 +1,56 @@
+using System.Diagnostics;
+using System.Text;
+
+const int N = 30_000;
+
+var swTotal = Stopwatch.StartNew();
+
+// --- 1. Генерация данных ---
+var rnd = new Random(42);
+var buyers = new List<string>();
+var amounts = new List<int>();
+for (int i = 0; i < N; i++)
+{
+    buyers.Add("user" + rnd.Next(0, 5000));
+    amounts.Add(rnd.Next(1, 10_000));
+}
+
+// --- 2. Список уникальных покупателей ---
+var sw = Stopwatch.StartNew();
+var unique = new HashSet<string>();  // ИЗМЕНЕНО: HashSet вместо List
+for (int i = 0; i < buyers.Count; i++)
+{
+    unique.Add(buyers[i]);
+}
+Console.WriteLine($"Уникальных покупателей: {unique.Count} ({sw.ElapsedMilliseconds} мс)");
+
+// --- 3. Текстовый отчёт ---
+sw.Restart();
+var report = new StringBuilder();  // ИЗМЕНЕНО: StringBuilder вместо string
+for (int i = 0; i < buyers.Count; i++)
+{
+    report.Append(buyers[i]).Append(';').Append(amounts[i]).Append(Environment.NewLine);
+}
+Console.WriteLine($"Отчёт: {report.Length} символов ({sw.ElapsedMilliseconds} мс)");
+
+// --- 4. Сортировка сумм ---
+sw.Restart();
+var sorted = new List<int>(amounts);
+sorted.Sort();  // ИЗМЕНЕНО: встроенная сортировка вместо пузырька
+Console.WriteLine($"Медианная сумма: {sorted[sorted.Count / 2]} ({sw.ElapsedMilliseconds} мс)");
+
+// --- 5. Сумма покупок каждого покупателя ---
+sw.Restart();
+var totalsDict = new Dictionary<string, long>();  // ИЗМЕНЕНО: Dictionary за один проход
+for (int i = 0; i < buyers.Count; i++)
+{
+    string b = buyers[i];
+    if (totalsDict.TryGetValue(b, out long current))
+        totalsDict[b] = current + amounts[i];
+    else
+        totalsDict[b] = amounts[i];
+}
+var topBuyer = totalsDict.MaxBy(kvp => kvp.Value);
+Console.WriteLine($"Максимум потратил: {topBuyer.Key} ({sw.ElapsedMilliseconds} мс)");
+
+Console.WriteLine($"ИТОГО: {swTotal.ElapsedMilliseconds} мс");
