@@ -8,8 +8,6 @@ namespace Lab3
     
     public class FileSplitter
     {
-       
-
         public static void SplitFile(string sourceFilePath, long partSizeBytes)
         {
             if (!File.Exists(sourceFilePath))
@@ -44,8 +42,6 @@ namespace Lab3
                 }
             }
         }
-
-        
 
         public static void MergeFiles(string sourceDirectory, string baseFileName, string outputFilePath)
         {
@@ -134,7 +130,7 @@ namespace Lab3
                                 var info2 = new FileInfo(merged);
                                 Console.WriteLine($"Размер оригинала: {info1.Length} байт");
                                 Console.WriteLine($"Размер склейки:   {info2.Length} байт");
-                                Console.WriteLine(info1.Length == info2.Length ? "✅ Размеры совпадают!" : "❌ Размеры НЕ совпадают!");
+                                Console.WriteLine(info1.Length == info2.Length ? " Размеры совпадают!" : " Размеры НЕ совпадают!");
                             }
                             else
                             {
